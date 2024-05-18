@@ -21,9 +21,11 @@ pipeline {
                 sh 'chmod +x teste-app.sh'
                 sh './teste-app.sh'
             }
-        stage('Shutdown dos containers de teste'){
-            sh 'docker-compose down'
         }
+        stage('Shutdown dos containers de teste'){
+            steps {
+                sh 'docker-compose down'
+            }
         }
     }
 }
