@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: devops-app
-          image: devops/app:latest
+          image: devops/app:TAG
           resources:
             requests:
               memory: "64Mi"
