@@ -1,9 +1,13 @@
 pipeline {
     agent any
+    environment {
+        TAG= sh(script: 'git describe --abbrev=0',, returnStdout: true).trim()
+
+    }
     stages {
         stage('build da imagem docker'){
             steps {
-                sh 'docker build -t devops/app .'
+                sh 'docker build -t devops/app:$(TAG) .'
             }
         }
         stage('subir docker compose - redis e app'){
@@ -47,8 +51,8 @@ pipeline {
                 script{
                     withCredentials([usernamePassword(credentialsId: 'nexus-user', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD' )]){
                         sh 'docker login -u $USERNAME -p $PASSWORD ${NEXUS_URL}'
-                        sh 'docker tag devops/app:latest ${NEXUS_URL}/devops/app'
-                        sh 'docker push ${NEXUS_URL}/devops/app'
+                        sh 'docker tag devops/app:$(TAG) ${NEXUS_URL}/devops/app:$(TAG)'
+                        sh 'docker push ${NEXUS_URL}/devops/app:$(TAG)'
                     }
                 }
             }
